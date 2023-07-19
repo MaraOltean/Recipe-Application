@@ -15,7 +15,7 @@ import java.util.List;
 public class MealUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String firstName;
     private String lastName;
     private Gender gender;
