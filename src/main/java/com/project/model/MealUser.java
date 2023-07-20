@@ -1,13 +1,13 @@
 package com.project.model;
 
 import com.project.model.enums.Gender;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @Data
 @Entity
 @AllArgsConstructor
@@ -25,8 +25,13 @@ public class MealUser {
     private double activityFactor;
     private String diseaseName;
     private double bmi;
+    @Column(nullable = true) //coloana accepta valori nule
     private double necessaryCalories;
-    private List<Integer> mealPlanIDs;
+    @ManyToMany(fetch = FetchType.LAZY) //relația se va face doar atunci când acestea sunt explicit accesate în cod.
+    @JoinTable(name = "meal_user_relationship",
+            joinColumns = {@JoinColumn(name = "meal_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private Set<MealPlan> meals = new HashSet<>();
 
 
 
