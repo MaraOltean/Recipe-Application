@@ -17,7 +17,9 @@ public class MealPlanService {
     }
 
     public MealPlan createMealPlan(MealPlan mealPlan){
-       return mealPlanRepository.save(mealPlan);
+        double menuCalories = totalKcal(mealPlan);
+        mealPlan.setTotalKcal(menuCalories);
+        return mealPlanRepository.save(mealPlan);
     }
     public List<MealPlan> getMealPlans(){
         return mealPlanRepository.findAll();
@@ -33,6 +35,13 @@ public class MealPlanService {
 
     public Optional<MealPlan> findMealPlanById(Long id){
        return mealPlanRepository.findById(id);
+    }
+
+    public double totalKcal(MealPlan mealPlan){
+        double menuCalories = 4 * (mealPlan.getBreakfastCarbohydrates()+ mealPlan.getLunchCarbohydrates() + mealPlan.getDinnerCarbohydrates())
+                            + 4 * (mealPlan.getBreakfastProteins() + mealPlan.getLunchProteins()+mealPlan.getDinnerProteins())
+                             + 9 * (mealPlan.getBreakfastLipid() + mealPlan.getLunchLipid() + mealPlan.getDinnerLipid());
+        return menuCalories;
     }
 
 }

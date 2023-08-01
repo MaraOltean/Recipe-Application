@@ -29,9 +29,19 @@ public class MealUserService {
 
     public void addUser(MealUser user){
         user.setNecessaryCalories(caloriesNeeded(user));
-        List<MealPlan> mealPlanList = new ArrayList<>();
-        mealPlanList = findCaloriesRange(user.getNecessaryCalories()-100, user.getNecessaryCalories()+100);
+        if(!user.getHaveDisease()){
+            nonDiseaseMealPlans(user);
+        }
+        else{
+            withDiseaseMealPlans(user);
+        }
+        mealUserRepository.save(user);
 
+    }
+
+    private void withDiseaseMealPlans(MealUser user){
+        List<MealPlan> mealPlanList = new ArrayList<>();
+        mealPlanList = findByDisease(user.getDiseaseName());
         for(MealPlan mealPlan : mealPlanList){
             //adauga pe coloana de utilizatori din MealPlan utilizatorii care se potrivesc
             mealPlan.getUsers().add(user);
@@ -40,9 +50,27 @@ public class MealUserService {
             mealPlanRepository.save(mealPlan);
 
         }
-        mealUserRepository.save(user);
-
     }
+
+    private void nonDiseaseMealPlans(MealUser user) {
+        List<MealPlan> mealPlanList = new ArrayList<>();
+        mealPlanList = findCaloriesRange(user.getNecessaryCalories()-100, user.getNecessaryCalories()+100);
+        for(MealPlan mealPlan : mealPlanList){
+            //adauga pe coloana de utilizatori din MealPlan utilizatorii care se potrivesc
+            mealPlan.getUsers().add(user);
+            //adauga pe coloana din utilizatori planurile alimentare care se potrivesc
+            user.getMeals().add(mealPlan);
+            mealPlanRepository.save(mealPlan);
+
+        }
+    }
+    private List<MealPlan> findByDisease(String disease){
+        String sql = "SELECT * FROM meal_plan WHERE type = :disease";
+        Query query = entityManager.createNativeQuery(sql, MealPlan.class);
+        query.setParameter("disease",disease);
+        return query.getResultList();
+    }
+
     public static double caloriesNeeded(MealUser user) {
         double BMR = 0;
         if (user.getGender().equals(Gender.M)) {

@@ -25,6 +25,8 @@ public class MealUser {
     private double activityFactor;
     private String diseaseName;
     private double bmi;
+    @Column(nullable = true)
+    private Boolean haveDisease;
     @Column(nullable = true) //coloana accepta valori nule
     private double necessaryCalories;
     @ManyToMany(fetch = FetchType.LAZY) //relația se va face doar atunci când acestea sunt explicit accesate în cod.
