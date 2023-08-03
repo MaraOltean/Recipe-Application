@@ -27,9 +27,9 @@ public class MealUser {
     private double bmi;
     @Column(nullable = true)
     private Boolean haveDisease;
-    @Column(nullable = true) //coloana accepta valori nule
+    @Column(nullable = true)
     private double necessaryCalories;
-    @ManyToMany(fetch = FetchType.LAZY) //relația se va face doar atunci când acestea sunt explicit accesate în cod.
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "meal_user_relationship",
             joinColumns = {@JoinColumn(name = "meal_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})

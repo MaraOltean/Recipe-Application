@@ -43,9 +43,7 @@ public class MealUserService {
         List<MealPlan> mealPlanList = new ArrayList<>();
         mealPlanList = findByDisease(user.getDiseaseName());
         for(MealPlan mealPlan : mealPlanList){
-            //adauga pe coloana de utilizatori din MealPlan utilizatorii care se potrivesc
             mealPlan.getUsers().add(user);
-            //adauga pe coloana din utilizatori planurile alimentare care se potrivesc
             user.getMeals().add(mealPlan);
             mealPlanRepository.save(mealPlan);
 
@@ -56,9 +54,7 @@ public class MealUserService {
         List<MealPlan> mealPlanList = new ArrayList<>();
         mealPlanList = findCaloriesRange(user.getNecessaryCalories()-100, user.getNecessaryCalories()+100);
         for(MealPlan mealPlan : mealPlanList){
-            //adauga pe coloana de utilizatori din MealPlan utilizatorii care se potrivesc
             mealPlan.getUsers().add(user);
-            //adauga pe coloana din utilizatori planurile alimentare care se potrivesc
             user.getMeals().add(mealPlan);
             mealPlanRepository.save(mealPlan);
 
@@ -83,9 +79,8 @@ public class MealUserService {
     }
 
     public List<MealPlan> findCaloriesRange(double minKcal, double maxKcal){
-       // Query query = entityManager.createQuery(
         String sql = "SELECT * FROM meal_plan WHERE total_kcal >= :minKcal AND total_kcal <= :maxKcal";
-        Query query = entityManager.createNativeQuery(sql, MealPlan.class); //"SELECT * FROM meal_plan WHERE total_kcal >= :minKcal AND total_kcal <= :maxKcal", MealPlan.class);
+        Query query = entityManager.createNativeQuery(sql, MealPlan.class);
         query.setParameter("minKcal", minKcal);
         query.setParameter("maxKcal", maxKcal);
 
