@@ -29,11 +29,11 @@ public class MealUserService {
 
     public void addUser(MealUser user){
         user.setNecessaryCalories(caloriesNeeded(user));
-        if(!user.getHaveDisease()){
-            nonDiseaseMealPlans(user);
+        if(user.getHaveDisease()){
+            withDiseaseMealPlans(user);
         }
         else{
-            withDiseaseMealPlans(user);
+            nonDiseaseMealPlans(user);
         }
         mealUserRepository.save(user);
 
@@ -78,8 +78,8 @@ public class MealUserService {
 
     }
 
-    public List<MealPlan> findCaloriesRange(double minKcal, double maxKcal){
-        String sql = "SELECT * FROM meal_plan WHERE total_kcal >= :minKcal AND total_kcal <= :maxKcal";
+    public List<MealPlan> findCaloriesRange(double minKcal, double maxKcal) {
+        String sql = "SELECT * FROM meal_plan WHERE (total_kcal >= :minKcal AND total_kcal <= :maxKcal) AND type = 'healthy'";
         Query query = entityManager.createNativeQuery(sql, MealPlan.class);
         query.setParameter("minKcal", minKcal);
         query.setParameter("maxKcal", maxKcal);
